@@ -42,6 +42,15 @@ class BooksController extends AppController {
 			throw new NotFoundException(__('Không tìm thấy sách này!'));
 		}
 		$this->set('book', $book);
+
+		//Xử lý báo cáo comments
+		pr($this->Session->check('comment_errors'));
+		if ($this->Session->check('comment_errors')) {
+			$errors = $this->Session->read('comment_errors');
+			$this->set('errors', $errors);
+			$this->Session->delete('comment_errors');
+		}
+
 	}
 
 

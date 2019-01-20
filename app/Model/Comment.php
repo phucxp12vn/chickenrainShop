@@ -37,11 +37,15 @@ class Comment extends AppModel {
 		'content' => array(
 			'notBlank' => array(
 				'rule' => array('notBlank'),
-				//'message' => 'Your custom message here',
+				'message' => 'Bình luận không được để trống!',
 				//'allowEmpty' => false,
 				//'required' => false,
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+			'minLength' => array(
+				'rule' => array('minLength', 8),
+				'message' => 'Nội dung bình luận phải có độ dài ít nhất là 8 kí tự!'
 			),
 		),
 	);

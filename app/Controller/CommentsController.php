@@ -13,7 +13,7 @@ class CommentsController extends AppController {
  *
  * @var array
  */
-	public $components = array('Paginator');
+	public $components = array('Paginator','Flash');
 
 /**
  * index method
@@ -47,17 +47,21 @@ class CommentsController extends AppController {
  */
 	public function add() {
 		if ($this->request->is('post')) {
-			$this->Comment->create();
-			if ($this->Comment->save($this->request->data)) {
-				$this->Flash->success(__('The comment has been saved.'));
-				return $this->redirect(array('action' => 'index'));
+			$this->Comment->set($this->request->data);
+			if ($this->Comment->validates()) {
+				$this->Comment->create();			
+				if ($this->Comment->save($this->request->data)) {
+					$this->Flash->success(__('Bạn đã đăng thành công một bình luận'));
+					//return $this->redirect(array('action' => 'index'));
+				} else {
+					$this->Flash->error(__('Đăng bình luận thất bại. Vui lòng thử lại!'));
+				}	
 			} else {
-				$this->Flash->error(__('The comment could not be saved. Please, try again.'));
+				  	$comment_errors = $this->Comment->validationErrors;
+				  	$this->Session->write('comment_errors', $comment_errors);
 			}
+			$this->redirect($this->referer());			
 		}
-		$users = $this->Comment->User->find('list');
-		$books = $this->Comment->Book->find('list');
-		$this->set(compact('users', 'books'));
 	}
 
 /**
